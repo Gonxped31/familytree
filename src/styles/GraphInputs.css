@@ -1,0 +1,45 @@
+.inputs {
+    color: white;
+    display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+    padding: 10px;
+}
+
+.verticesInput {
+    display: flex;
+    flex-direction: column;
+    width: 200px;
+}
+
+.edgesInput {
+    display: flex;
+    flex-direction: column;
+    width: 200px;
+    padding-left: 100px;
+}
+
+.textarea {
+    height: 25px;
+}
+
+.buttonsDisplay {
+    display: flex;
+    flex-direction: column;
+    padding-left: 100px;
+    padding-top: 10px;
+}
+
+.buttons {
+    height: 40px;
+    width: 150px;
+}
+
+.saveclass {
+    display: flex;
+    flex-direction: row;
+}
+
+.titles {
+    color: white;
+}
