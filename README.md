@@ -1,2 +1,2 @@
-##Instructions
+#Instructions
 #Start the program
