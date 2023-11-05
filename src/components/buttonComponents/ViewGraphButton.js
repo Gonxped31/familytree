@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import '../../styles/ModifyNode.css';
 
-//TODO
 export default function ViewGraphButton() {
   const [display, setDisplay] = useState(false);
   const [datas, setDatas] = useState([]);
