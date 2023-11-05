@@ -4,7 +4,8 @@ import '../styles/ModifyNode.css'
 
 export default function ModifyNode({ graph ,selectedNode, updateGraph, editMode }) {
     const [nodeInfos, updateNodeInfos] = useState([selectedNode.data[0], selectedNode.data[1],selectedNode.data[2],
-                                                    selectedNode.data[3],selectedNode.data[4],selectedNode.data[5],]);
+                                                    selectedNode.data[3],selectedNode.data[4],selectedNode.data[5],
+                                                    selectedNode.data[6], selectedNode.data[7]]);
 
     const handleForm = (e) => {
         e.preventDefault();
@@ -75,13 +76,30 @@ export default function ModifyNode({ graph ,selectedNode, updateGraph, editMode 
                 value={nodeInfos[4]}
                 name='profession' /><br />
 
-                <label for='contact'>Contact (email): </label>
+                <label for='contact'>E-mail: </label>
                 <input
                 onChange={(e) => handleFormChanges(e, 5, nodeInfos, updateNodeInfos)}
                 type='text' 
-                id='contact' 
+                id='courriel'
                 value={nodeInfos[5]}
-                name='contact' /><br />
+                name='courriel' /><br />
+
+                <label for='contact'>Phone number: </label>
+                <input
+                onChange={(e) => handleFormChanges(e, 6, nodeInfos, updateNodeInfos)}
+                type='text' 
+                id='phone'
+                value={nodeInfos[6]}
+                name='phone' /><br />
+
+                <label for='contact'>Other information: </label>
+                <input
+                onChange={(e) => handleFormChanges(e, 7, nodeInfos, updateNodeInfos)}
+                type='text' 
+                id='other'
+                value={nodeInfos[7]}
+                name='other' /><br />
+
                 <button type="button" onClick={handleForm}>Save</button>
             </form>
         </div>}

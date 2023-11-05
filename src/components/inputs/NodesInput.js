@@ -73,12 +73,26 @@ export default function NodesInput({ graph, updateGraph }) {
           id='prefesion'
           name='profession' /><br />
 
-          <label for='contact'>Contact (email): </label>
+          <label for='contact'>E-mail: </label>
           <input
           onChange={(e) => handleFormChanges(e, 5, nodeInformations, setNodeInformations)}
           type='text' 
-          id='contact' 
-          name='contact' /><br />
+          id='courriel' 
+          name='courriel' /><br />
+
+          <label for='contact'>Phone number: </label>
+          <input
+          onChange={(e) => handleFormChanges(e, 6, nodeInformations, setNodeInformations)}
+          type='text' 
+          id='phone' 
+          name='phone' /><br />
+
+          <label for='contact'>Other information: </label>
+          <input
+          onChange={(e) => handleFormChanges(e, 7, nodeInformations, setNodeInformations)}
+          type='text' 
+          id='other'
+          name='other' /><br />
           
         </form> <br/>
         <button onClick={addNode}>Add Member</button>
