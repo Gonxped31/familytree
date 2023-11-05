@@ -10,7 +10,6 @@ NodeJS 20
 <p>
   First, in the project directory (./.../familitree), run the app in the command line: 'npm start'.<br/>
  Then, go to the database folder (directory: ./.../familytree/src/database) and run the server with nodeJS: 'node server.js'.<br/>
- <b>WARING:</b> Always run the server before the react app.<br/>
  You can now start using the app !
 </p>
 
@@ -20,9 +19,6 @@ NodeJS 20
  <ul>
   <li>
    Dragon_Ball_Tree
-  </li>
-  <li>
-   Jojo_Tree
   </li>
   <li>
    Naruto_Tree
@@ -49,5 +45,10 @@ Here's a description of what the buttons on app do.
 
 <h3>Graph description</h3>
 <p>
-  You can see the informations of the node and modify it by clicking on this node. Be carefull, when you click on the node, the default values in the input fields are the actual informations.
+  You can see the informations of the node and modify it by clicking on this node. Be carefull, when you click on the node, the default values in the input fields are the actual informations.<br/>
+  You can also move and zoom on the graph area.
 </p>
+
+<h2>Warnings and possible errors</h2>
+-> Always run the server before the react app.<br/>
+-> Don't reload the page while the server is running.
