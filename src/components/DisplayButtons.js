@@ -2,6 +2,7 @@ import { useState } from 'react';
 import SaveButton from './buttonComponents/SaveButton';
 import LoadButton from './buttonComponents/LoadButton';
 import DeleteGraph from './buttonComponents/DeleteGraph';
+import ViewGraphButton from './inputs/ViewGraphButton';
 
 export default function DisplayButtons({ graph, updateGraph, changeOption }) {
     const [onOff, setOnOff] = useState(false);
@@ -49,7 +50,7 @@ export default function DisplayButtons({ graph, updateGraph, changeOption }) {
             <div>
                 <LoadButton updateGraph={updateGraph} graphName={graphName} />
                 <DeleteGraph graphName={graphName} />
-                <button className='buttons'>VIEW MY GRAPHS</button>
+                <ViewGraphButton />
             </div><br />
 
             <div className='saveclass'>

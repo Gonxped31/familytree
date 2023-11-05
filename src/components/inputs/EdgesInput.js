@@ -40,7 +40,7 @@ export default function EdgesInput({ graph, updateGraph }) {
 
   return (
     <div className='edgesInput'>
-        <h2 className='titles'>Edges</h2>
+        <h2 className='titles'>Relation</h2>
         <text>From (First Name)</text>
         <textarea className='textarea' id='startingVertex' name='start' onChange={(e) => setFrom(e.target.value)} />
         <text>To (First Name)</text>

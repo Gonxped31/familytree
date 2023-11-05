@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
-import handleFormChanges from './Utilitaries';
+import handleFormChanges from '../Utilitaries';
 
-export default function VerticesInput({ graph, updateGraph }) {
+export default function NodesInput({ graph, updateGraph }) {
 
     const [nodeInformations, setNodeInformations] = useState([])
 

@@ -1,7 +1,7 @@
 import React from 'react'
 import '../styles/GraphInputs.css'
-import VerticesInput from './VerticesInput'
-import EdgesInput from './EdgesInput'
+import VerticesInput from './inputs/NodesInput'
+import EdgesInput from './inputs/EdgesInput'
 import DisplayButtons from './DisplayButtons'
 
 export default function GraphInputs({ graph, updateGraph, changeOption }) {
