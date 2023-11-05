@@ -24,12 +24,11 @@ NodeJS 20
    Naruto_Tree
   </li>
  </ul>
- You can load then and custom them as you wish.
 </p>
 
 <h2>App features</h2>
 <h3>Buttons description</h3>
-Here's a description of what the buttons on app do.
+Here's a description of app's buttons:
 <ul>
  <li>Add member: Add a new family member to the graph</li>
  <li>Remove member: Remove a family member based on the firstname only.</li>
@@ -38,7 +37,7 @@ Here's a description of what the buttons on app do.
  <li>Save graph: Save the graph with the name entered in the input field in the database.</li>
  <li>Load graph: Load the graph with the name entered in the input field from the database.</li>
  <li>Delete: Delete the graph with the name entered in the input field in the database.</li>
- <li>View my graph: Display all the graphs that you have created.</li>
+ <li>View my graph: Display all the graphs that you have created. <b>**Working on this feature**</b></li>
  <li>Clear: Clear the graph.</li>
  <li>Current display: Display the graph as a 'graph'(without hierarchy) or as a 'tree'(with hierarchy)</li>
 </ul>
