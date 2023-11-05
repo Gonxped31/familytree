@@ -24,12 +24,11 @@ NodeJS 20
    Naruto_Tree
   </li>
  </ul>
- You can load then and custom them as you wish.
 </p>
 
 <h2>App features</h2>
 <h3>Buttons description</h3>
-Here's a description of what the buttons on app do.
+Here's a description of app's buttons:
 <ul>
  <li>Add member: Add a new family member to the graph</li>
  <li>Remove member: Remove a family member based on the firstname only.</li>
