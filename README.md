@@ -38,7 +38,7 @@ Here's a description of what the buttons on app do.
  <li>Save graph: Save the graph with the name entered in the input field in the database.</li>
  <li>Load graph: Load the graph with the name entered in the input field from the database.</li>
  <li>Delete: Delete the graph with the name entered in the input field in the database.</li>
- <li>View my graph: Display all the graphs that you have created.</li><b>**Working on this feature**</b>
+ <li>View my graph: Display all the graphs that you have created. <b>**Working on this feature**</b></li>
  <li>Clear: Clear the graph.</li>
  <li>Current display: Display the graph as a 'graph'(without hierarchy) or as a 'tree'(with hierarchy)</li>
 </ul>
