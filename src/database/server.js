@@ -71,7 +71,7 @@ app.get('/', (req, res) => {
 
     db.get(`SELECT * FROM ${tableName} WHERE name = ?`, [graphName], (err, row) =>{
         if (err) {
-            console.log(`Error: ${err.message}`)
+            console.log(`Error: ${err.message}`);
             res.status(500).json({ error: err.message });
             return;
         }
@@ -83,6 +83,32 @@ app.get('/', (req, res) => {
         }
         res.json(row);
     });
+});
+
+// API to get all the graphs name
+app.get('/viewGraphs', (req, res) => {
+    console.log("Loading graphs");
+    try {
+        db.all(`SELECT name FROM graphs`, (err, rows) => {
+            if (err) {
+                console.log(`Error: ${err.message}`);
+                res.status(500).json({ error: err.message });
+                return;
+            }
+
+            if (rows.length === 0) {
+                console.log("Database is empty");
+                res.json([]);
+            } else {
+                console.log("Graphs loaded");
+                const graphNames = rows.map((row) => row.name);
+                res.json(graphNames);
+            }
+        });
+    } catch (err) {
+        console.error("An error occurred:", err);
+        res.status(500).json({ error: err.message });
+    }
 });
 
 

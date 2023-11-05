@@ -2,7 +2,7 @@ import { useState } from 'react';
 import SaveButton from './buttonComponents/SaveButton';
 import LoadButton from './buttonComponents/LoadButton';
 import DeleteGraph from './buttonComponents/DeleteGraph';
-import ViewGraphButton from './inputs/ViewGraphButton';
+import ViewGraphButton from './buttonComponents/ViewGraphButton';
 
 export default function DisplayButtons({ graph, updateGraph, changeOption }) {
     const [onOff, setOnOff] = useState(false);
