@@ -24,8 +24,7 @@ export default function SaveButton({ graph, graphName }) {
                 console.log('Data received from the server:', data);
             })
             .catch((error) => {
-                // Handle errors, such as network errors or JSON parsing errors
-                console.error('Error:', error);
+                console.error('Error saving the graph:', error);
             });
     };
 

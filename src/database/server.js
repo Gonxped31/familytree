@@ -3,11 +3,15 @@ const express = require("express");
 const fs = require('fs');
 const sqlite3 = require('sqlite3').verbose();
 const app = express();
-const port = process.env.PORT || 3000;
+const port = /*process.env.PORT ||*/ 3000;
 
 // create a database
 const databaseName = "familyTreeDb.db";
 let db;
+
+const graphTabName = "graphs";
+const usersTabName = "users";
+
 if (fs.existsSync(databaseName)){
     db = new sqlite3.Database(databaseName, sqlite3.OPEN_READWRITE, (err) => {
         if (err){
@@ -24,11 +28,11 @@ if (fs.existsSync(databaseName)){
             console.log("Database created succesfully.");
             // create tables and add some datas
             db.serialize(() => {
-                db.run("CREATE TABLE users (id INTEGER PRIMARY KEY, last_name TEXT, first_name TEXT, pseudo TEXT, courriel TEXT)");
-                db.run(`CREATE TABLE graphs (name TEXT, nodes TEXT, edges TEXT)`);
+                db.run(`CREATE TABLE ${usersTabName} (id INTEGER PRIMARY KEY AUTOINCREMENT, first_name TEXT, last_name TEXT, email TEXT, password TEXT)`);
+                db.run(`CREATE TABLE ${graphTabName} (name TEXT, nodes TEXT, edges TEXT)`);
 
-                const stmt = db.prepare("INSERT INTO users VALUES (?, ?, ?, ?, ?)");
-                stmt.run(0, "Sam", "Gbian", "gonxped31", "samirgbian31@gmail.com");
+                const stmt = db.prepare(`INSERT INTO ${usersTabName} VALUES (null, ?, ?, ?, ?)`);
+                stmt.run("Sam", "Gbian", "gonxped31@gmail.com", "1234");
                 stmt.finalize();
             })
         }
@@ -37,39 +41,32 @@ if (fs.existsSync(databaseName)){
 
 app.use(express.json());
 
+/* GRAPH CODE */
+
 // API to add a graph to the database
 app.post('/', (req, res) => {
     console.log("Request received.");
     const newData = req.body;
-    const tableName = "graphs";
 
-    db.get(`SELECT name FROM sqlite_master WHERE type='table' AND name=?`, [tableName], (err, row) => {
+    console.log(`Adding data to '${graphTabName}'.`);
+    db.run(`INSERT INTO ${graphTabName} (name, nodes, edges) VALUES (?, ?, ?)`, [newData.graphName, JSON.stringify(newData.nodes), JSON.stringify(newData.edges)], (err) => {
         if (err) {
-          console.error('Error checking table existence:', err);
+            console.error('Error adding data to the database:', err.message);
+            res.status(500).json({ error: 'An error occurred while adding data.' });
         } else {
-            console.log(`Adding data to '${tableName}'.`);
-
-            db.run(`INSERT INTO ${tableName} (name, nodes, edges) VALUES (?, ?, ?)`, [newData.graphName, JSON.stringify(newData.nodes), JSON.stringify(newData.edges)], (err) => {
-                if (err) {
-                    console.error('Error adding data to the database:', err.message);
-                    res.status(500).json({ error: 'An error occurred while adding data.' });
-                } else {
-                    console.log('Data added successfully');
-                    res.status(200).json({ message: 'Data added successfully' });
-                }
-            })
+            console.log('Data added successfully');
+            res.status(200).json({ message: 'Data added successfully' });
         }
     });
-})
+});
 
 
 // API for retreive a graph
 app.get('/', (req, res) => {
     console.log("Retreiving data")
     const graphName = req.query.graphName;
-    const tableName = "graphs";
 
-    db.get(`SELECT * FROM ${tableName} WHERE name = ?`, [graphName], (err, row) =>{
+    db.get(`SELECT * FROM ${graphTabName} WHERE name = ?`, [graphName], (err, row) =>{
         if (err) {
             console.log(`Error: ${err.message}`);
             res.status(500).json({ error: err.message });
@@ -89,7 +86,7 @@ app.get('/', (req, res) => {
 app.get('/viewGraphs', (req, res) => {
     console.log("Loading graphs");
     try {
-        db.all(`SELECT name FROM graphs`, (err, rows) => {
+        db.all(`SELECT name FROM ${graphTabName}`, (err, rows) => {
             if (err) {
                 console.log(`Error: ${err.message}`);
                 res.status(500).json({ error: err.message });
@@ -133,7 +130,7 @@ app.delete('/', (req, res) => {
     const name = req.query.graphName;
     console.log(name);
 
-    db.run('DELETE FROM graphs WHERE name = ?', [name], (err) => {
+    db.run(`DELETE FROM ${graphTabName} WHERE name = ?`, [name], (err) => {
         if (err) {
             res.status(500).json({ error: err.message });
             return;
@@ -143,6 +140,41 @@ app.delete('/', (req, res) => {
     });
 });
 
+/* USER CODE */
+// API to add a user
+app.post('/SignUp', (req, res) => {
+    const newUser = req.body;
+    const stmt = db.prepare(`INSERT INTO ${usersTabName} VALUES (null, ?, ?, ?, ?)`);
+    console.log(`Adding ${newUser.lastName} to the database...`)
+    try {
+        stmt.run(newUser.firstName, newUser.lastName, newUser.email, newUser.password);
+        stmt.finalize();
+        console.log(`${newUser.lastName} have been added succesfully.`)
+        res.status(200).json({ message: 'User saved successfully' });
+    } catch (error) {
+        console.log("Error: ", error.message);
+        res.status(500).json({ error: 'An error occurred while adding data.' });
+    }
+});
+
+// API to checck if a user exist (based on the email only)
+app.get('/verifyUserExistance', (req, res) => {
+    const userEmail = req.query.userEmail;
+    db.get(`SELECT * FROM ${usersTabName} WHERE email = ?`, [userEmail], (err, row) => {
+        if (err) {
+            console.log(`Error: ${err.message}`);
+            res.status(500).json({ error: `An error occurred while checking a user existence based on the email: ${err.message}` });
+        } else {
+            if (!row) {
+                console.log(`The user with the email '${userEmail}' doesn't exist.`);
+                res.json({ message: "User not found" });
+            } else {
+                console.log(`Found the user with the email '${userEmail}'.`);
+                res.json({ message: row });
+            }
+        }
+    })
+});
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);

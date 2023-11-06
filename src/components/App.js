@@ -1,10 +1,14 @@
 import '../styles/App.css';
 import { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import GraphInputs from './GraphInputs'
 import GraphView from './GraphView';
+import SignUp from './SignUp';
+import SignIn from './SignIn';
+import DisplayApp from './DisplayApp';
 
 function App() {
-  const [graph, updateGraph] = useState({
+  /*const [graph, updateGraph] = useState({
     nodes: [], 
     edges: []
   })
@@ -18,13 +22,16 @@ function App() {
       hover: true,
       select: true,
     },
-  })
+  })*/
 
   return (
-    <div className="App">
-      <GraphInputs graph={graph} updateGraph={updateGraph} changeOption={changeOption} />
-      <GraphView graph={graph} option={option} updateGraph={updateGraph} />
-    </div>
+    <Router>
+      <Routes>
+        <Route path='/' element={<SignUp />} />
+        <Route path="/signin" element={<SignIn />} />
+        <Route path="/display" element={<DisplayApp />} />
+      </Routes>
+    </Router>
   );
 }
 

@@ -14,7 +14,10 @@ export default function DeleteGraph({ graphName }) {
         }
         return response.text();
       })
-      .then((res) => alert(JSON.parse(res).message));
+      .then((res) => alert(JSON.parse(res).message))
+      .catch((error) => {
+        console.log("Error deleting the graph: ", error);
+      })
     }
 
 

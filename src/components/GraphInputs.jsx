@@ -1,6 +1,6 @@
 import React from 'react'
 import '../styles/GraphInputs.css'
-import VerticesInput from './inputs/NodesInput'
+import NodesInput from './inputs/NodesInput'
 import EdgesInput from './inputs/EdgesInput'
 import DisplayButtons from './DisplayButtons'
 
@@ -8,7 +8,7 @@ export default function GraphInputs({ graph, updateGraph, changeOption }) {
 
   return (
   <div className="inputs">
-        <VerticesInput graph={graph} updateGraph={updateGraph} />
+        <NodesInput graph={graph} updateGraph={updateGraph} />
 
         <EdgesInput graph={graph} updateGraph={updateGraph} />
 

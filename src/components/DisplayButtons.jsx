@@ -3,11 +3,14 @@ import SaveButton from './buttonComponents/SaveButton';
 import LoadButton from './buttonComponents/LoadButton';
 import DeleteGraph from './buttonComponents/DeleteGraph';
 import ViewGraphButton from './buttonComponents/ViewGraphButton';
+import { Button } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 export default function DisplayButtons({ graph, updateGraph, changeOption }) {
     const [onOff, setOnOff] = useState(false);
     const [hierarchie, setHierarchie] = useState("GRAPH");
     const [graphName, updateGraphName] = useState("Graph");
+    const navigate = useNavigate();
 
     function updateHierarchie() {
         if (onOff) {
@@ -61,6 +64,7 @@ export default function DisplayButtons({ graph, updateGraph, changeOption }) {
                 <button className='buttons' onClick={updateHierarchie}>
                     CURRENT DISPLAY : {hierarchie}
                 </button>
+                <Button variant='contained' onClick={navigate('/signin')}>EXIT</Button>
             </div>
             
         </div>
