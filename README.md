@@ -8,7 +8,7 @@ NodeJS 20
 
 <h2>Run the app and the server</h2>
 <p>
-  First, in the project directory (./.../familitree), run the app in the command line: 'npm start'.<br/>
+  First, in the project directory (./.../familitree), run the app in the command line: 'npm install' then 'npm start'.<br/>
  Then, go to the database folder (directory: ./.../familytree/src/database) and run the server with nodeJS: 'node server.js'.<br/>
  You can now start using the app !
 </p>
