@@ -12,7 +12,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import DisplayApp from './DisplayApp';
+import Home from './Home';
 
 function Copyright(props) {
   return (
@@ -32,30 +32,14 @@ function Copyright(props) {
 const defaultTheme = createTheme();
 
 export default function SignIn() {
-  const [dataValidation, setDatasValidation] = React.useState(true);
   const [displayApp, setDisplayApp] = React.useState(false);
-
-  const [graph, updateGraph] = React.useState({
-    nodes: [], 
-    edges: []
-  })
-
-  const [option, changeOption] = React.useState({
-    height: "900px",
-    layout: {
-        hierarchical: false
-    },
-    interaction: {
-      hover: true,
-      select: true,
-    },
-  })
 
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
+    const dataToSend = [data.get("email"), data.get("password")].join(',');
 
-    fetch(`/verifyUserExistance?userEmail=${data.get("email")}`, {
+    fetch(`/verifypassword?data=${dataToSend}`, {
       method: 'GET',
       headers: {
           'Content-type': 'application/json'
@@ -65,21 +49,15 @@ export default function SignIn() {
         if (!response.ok) {
             throw new Error("Error: the network response wasn't ok");
         }
-        return response.text();
+        return response.json();
     })
     .then((res) => {
         const jsonRes = JSON.parse(res);
-        if (jsonRes.message === "User not found") {
-          alert("The email is not correct.")
-          setDisplayApp(false);
+        if (jsonRes) {
+          setDisplayApp(true);
         } else {
-          console.log(typeof(jsonRes));
-          if (jsonRes.message.password === data.get("password")) {
-            setDisplayApp(true);
-          } else{
-            setDisplayApp(false);
-            alert("The password is not correct.")
-          }
+          setDisplayApp(false);
+          alert("The email and/or the password is not correct.")
         }
     })
     .catch((error) => {
@@ -88,7 +66,7 @@ export default function SignIn() {
   };
 
   return ( displayApp ? 
-    <DisplayApp graph={graph} updateGraph={updateGraph} option={option} changeOption={changeOption} /> 
+    <Home />
     :
     <ThemeProvider theme={defaultTheme}>
       <Container component="main" maxWidth="xs">

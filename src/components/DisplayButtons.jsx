@@ -1,20 +1,19 @@
-import { useState } from 'react';
+import * as React from 'react';
 import SaveButton from './buttonComponents/SaveButton';
 import LoadButton from './buttonComponents/LoadButton';
 import DeleteGraph from './buttonComponents/DeleteGraph';
 import ViewGraphButton from './buttonComponents/ViewGraphButton';
 import { Button } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import Link from '@mui/material/Link';
 
 export default function DisplayButtons({ graph, updateGraph, changeOption }) {
-    const [onOff, setOnOff] = useState(false);
-    const [hierarchie, setHierarchie] = useState("GRAPH");
-    const [graphName, updateGraphName] = useState("Graph");
-    const navigate = useNavigate();
+    const [onOff, setOnOff] = React.useState(false);
+    const [hierarchy, setHierarchy] = React.useState("GRAPH");
+    const [graphName, updateGraphName] = React.useState("Graph");
 
     function updateHierarchie() {
         if (onOff) {
-            setHierarchie("GRAPH");
+            setHierarchy("GRAPH");
             setOnOff(false);
             changeOption({
                 height: "900px",
@@ -23,7 +22,7 @@ export default function DisplayButtons({ graph, updateGraph, changeOption }) {
                 },
             });
         } else {
-            setHierarchie("TREE");
+            setHierarchy("TREE");
             setOnOff(true);
             changeOption({
                 height: "900px",
@@ -62,11 +61,15 @@ export default function DisplayButtons({ graph, updateGraph, changeOption }) {
                 </button>
 
                 <button className='buttons' onClick={updateHierarchie}>
-                    CURRENT DISPLAY : {hierarchie}
+                    CURRENT DISPLAY : {hierarchy}
                 </button>
-                <Button variant='contained' onClick={navigate('/signin')}>EXIT</Button>
+                {/*<Button variant='contained' onClick={() => navigate('/SignIn')}>EXIT</Button>*/}
+                <Link href='/SignIn' variant="body2">
+                    <Button variant={"contained"}>
+                        EXIT
+                    </Button>
+                </Link>
             </div>
-            
         </div>
     );
 }

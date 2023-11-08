@@ -39,7 +39,7 @@ export default function SignUp() {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     
-    fetch(`/verifyUserExistance?userEmail=${data.get("email")}`, {
+    fetch(`/verifyUserExistence?userEmail=${data.get("email")}`, {
         method: 'GET',
         headers: {
             'Content-type': 'application/json'
@@ -67,7 +67,7 @@ export default function SignUp() {
   };
 
   const handlePost = (data) => {
-    fetch(`/SignUp`, {
+    fetch(`/addUser`, {
       method: 'POST',
       headers: {
         'Content-type': 'application/json'

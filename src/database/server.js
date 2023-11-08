@@ -1,12 +1,19 @@
 
 const express = require("express");
 const bcrypt = require('bcrypt');
+const saltRounds = 12;
 const fs = require('fs');
 const path = require("path"); // Import the 'path' module
 const sqlite3 = require('sqlite3').verbose();
 const app = express();
 const port = process.env.PORT || 3000;
 
+const databaseName = "familyTreeDb.db";
+let db;
+
+const graphTabName = "graphs";
+const usersTabName = "users";
+/*
 app.use(express.static(`${process.cwd()}/public/`))
 
 app.get('*', async (req, res) => {
@@ -16,13 +23,7 @@ app.get('*', async (req, res) => {
         }
     })
 });
-
-// create a database
-const databaseName = "familyTreeDb.db";
-let db;
-
-const graphTabName = "graphs";
-const usersTabName = "users";
+*/
 
 if (fs.existsSync(databaseName)){
     db = new sqlite3.Database(databaseName, sqlite3.OPEN_READWRITE, (err) => {
@@ -72,7 +73,6 @@ app.post('/', (req, res) => {
     });
 });
 
-
 // API for retreive a graph
 app.get('/', (req, res) => {
     console.log("Retreiving data")
@@ -120,7 +120,6 @@ app.get('/viewGraphs', (req, res) => {
     }
 });
 
-
 // API to modify an existing data (going to use it for the profile modification if needed)
 /*app.put('/update/:id', (req, res) => {
     const updatedData = req.body; // Updated data typically in the request body
@@ -152,42 +151,88 @@ app.delete('/', (req, res) => {
     });
 });
 
+
 /* USER CODE */
 // API to add a user
-app.post('/SignUp', (req, res) => {
+app.post('/addUser', (req, res) => {
     const newUser = req.body;
     const stmt = db.prepare(`INSERT INTO ${usersTabName} VALUES (null, ?, ?, ?, ?)`);
-    console.log(`Adding ${newUser.lastName} to the database...`)
-    try {
-        stmt.run(newUser.firstName, newUser.lastName, newUser.email, newUser.password);
-        stmt.finalize();
-        console.log(`${newUser.lastName} have been added succesfully.`)
-        res.status(200).json({ message: 'User saved successfully' });
-    } catch (error) {
-        console.log("Error: ", error.message);
-        res.status(500).json({ error: 'An error occurred while adding data.' });
-    }
+
+    // encrypte the user password
+    bcrypt.hash(newUser.password, saltRounds, (err, hash) => {
+        if (err) {
+            console.log(`Error: ${err.message}`);
+            res.status(500).json({ error: `An error occurred while adding a new user.` });
+        } else {
+            const encryptedPassword = hash;
+            console.log(`Adding ${newUser.lastName} to the database...`)
+            try {
+                stmt.run(newUser.firstName, newUser.lastName, newUser.email, encryptedPassword);
+                stmt.finalize();
+                console.log(`${newUser.lastName} have been added succesfully.`)
+                res.status(200).json({ message: 'User saved successfully' });
+            } catch (error) {
+                console.log("Error: ", error.message);
+                res.status(500).json({ error: 'An error occurred while adding data.' });
+            }
+        }
+    });
 });
 
-// API to checck if a user exist (based on the email only)
-app.get('/verifyUserExistance', (req, res) => {
+// API to check if a user exist (based on the email only)
+app.get('/verifyUserExistence', (req, res) => {
     console.log("Checking user existance...");
-    const userEmail = req.query.userEmail;
-    db.get(`SELECT * FROM ${usersTabName} WHERE email = ?`, [userEmail], (err, row) => {
+    const email = req.query.data;
+    db.get(`SELECT * FROM ${usersTabName} WHERE email = ?`, [email], (err, row) => {
         if (err) {
             console.log(`Error: ${err.message}`);
             res.status(500).json({ error: `An error occurred while checking a user existence based on the email: ${err.message}` });
         } else {
             if (!row) {
-                console.log(`The user with the email '${userEmail}' doesn't exist.`);
+                console.log(`The user with the email '${email}' doesn't exist.`);
                 res.json({ message: "User not found" });
             } else {
-                console.log(`Found the user with the email '${userEmail}'.`);
+                console.log(`Found the user with the email '${email}'.`);
                 res.json({ message: row });
             }
         }
     })
 });
+
+// API to verify user password and the email for sign in
+app.get('/verifypassword', (req, res) => {
+    const datas = req.query.data.split(',');
+    const userEmail = datas[0];
+    const enteredPassword = datas[1];
+
+    // Get the hashed password from the database
+    db.get(`SELECT password FROM ${usersTabName} WHERE email = ?`, [userEmail], (err, row) => {
+        if (err) {
+            console.log(`Error: ${err.message}`);
+            res.status(500).json({ error: `An error occurred while getting a user password for verification` });
+        } else {
+            // Another verification for the user email
+            if (!row) {
+                res.json(false);
+            } else {
+                bcrypt.compare(enteredPassword, row.password, (err, result) => {
+                    if (err) {
+                        console.log(`Error: ${err.message}`);
+                        res.status(500).json({ error: `An error occurred while verifying the user password` });
+                    } else {
+                        if (result) {
+                            console.log(`Password matches.`);
+                        } else {
+                            console.log(`Password doesn't match.`);
+                        }
+                        res.json(result);
+                    }
+                });
+            }
+        }
+    });
+});
+
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);

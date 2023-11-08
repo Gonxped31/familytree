@@ -1,4 +1,4 @@
-<h1>App description</h1>
+<h1>Home description</h1>
 
 <h2>Porject description</h2>
 This app allows you to create a graph/tree to represent family members and the relation between them.
@@ -26,7 +26,7 @@ NodeJS 20
  </ul>
 </p>
 
-<h2>App features</h2>
+<h2>Home features</h2>
 <h3>Buttons description</h3>
 Here's a description of app's buttons:
 <ul>
