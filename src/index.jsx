@@ -3,8 +3,8 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
 import {BrowserRouter as Router, Routes, Route} from "react-router-dom";
-import SignIn from "./components/SignIn";
-import SignUp from "./components/SignUp";
+import SignIn from "./components/authentifications/SignIn";
+import SignUp from "./components/authentifications/SignUp";
 import Home from "./components/Home";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));

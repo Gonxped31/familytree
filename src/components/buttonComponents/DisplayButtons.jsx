@@ -1,8 +1,8 @@
 import * as React from 'react';
-import SaveButton from './buttonComponents/SaveButton';
-import LoadButton from './buttonComponents/LoadButton';
-import DeleteGraph from './buttonComponents/DeleteGraph';
-import ViewGraphButton from './buttonComponents/ViewGraphButton';
+import SaveButton from './SaveButton';
+import LoadButton from './LoadButton';
+import DeleteGraph from './DeleteGraph';
+import ViewGraphButton from './ViewGraphButton';
 import { Button } from '@mui/material';
 import Link from '@mui/material/Link';
 

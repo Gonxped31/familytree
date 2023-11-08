@@ -12,7 +12,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import Home from './Home';
+import PrincipalView from '../appModes/PrincipalView';
 
 function Copyright(props) {
   return (
@@ -39,7 +39,7 @@ export default function SignIn() {
     const data = new FormData(event.currentTarget);
     const dataToSend = [data.get("email"), data.get("password")].join(',');
 
-    fetch(`/verifypassword?data=${dataToSend}`, {
+    fetch(`/signin?data=${dataToSend}`, {
       method: 'GET',
       headers: {
           'Content-type': 'application/json'
@@ -66,7 +66,7 @@ export default function SignIn() {
   };
 
   return ( displayApp ? 
-    <Home />
+    <PrincipalView />
     :
     <ThemeProvider theme={defaultTheme}>
       <Container component="main" maxWidth="xs">

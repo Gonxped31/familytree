@@ -1,18 +1,32 @@
-
 const express = require("express");
+const session = require("express-session");
+const crypto = require("crypto");
 const bcrypt = require('bcrypt');
 const saltRounds = 12;
 const fs = require('fs');
-const path = require("path"); // Import the 'path' module
+const path = require("path");
 const sqlite3 = require('sqlite3').verbose();
 const app = express();
 const port = process.env.PORT || 3000;
 
-const databaseName = "familyTreeDb.db";
 let db;
-
-const graphTabName = "graphs";
+const databaseName = "familyTreeDb.db";
 const usersTabName = "users";
+
+// Function to create a hashed table name from an email
+const getHashedTableName = (firstName) => {
+    const hash = crypto.createHash('sha256').update(firstName).digest('hex');
+    return `user_${hash}`;
+}
+
+app.use(session({
+    secret: 'hamburger-fouberg',
+    resave: false,
+    saveUninitialized: true
+}));
+
+app.use(express.json());
+
 /*
 app.use(express.static(`${process.cwd()}/public/`))
 
@@ -42,41 +56,50 @@ if (fs.existsSync(databaseName)){
             // create tables and add some datas
             db.serialize(() => {
                 db.run(`CREATE TABLE ${usersTabName} (id INTEGER PRIMARY KEY AUTOINCREMENT, first_name TEXT, last_name TEXT, email TEXT, password TEXT)`);
-                db.run(`CREATE TABLE ${graphTabName} (name TEXT, nodes TEXT, edges TEXT)`);
+                //db.run(`CREATE TABLE ${graphTabName} (name TEXT, nodes TEXT, edges TEXT)`);
 
-                const stmt = db.prepare(`INSERT INTO ${usersTabName} VALUES (null, ?, ?, ?, ?)`);
+                /*const stmt = db.prepare(`INSERT INTO ${usersTabName} VALUES (null, ?, ?, ?, ?)`);
                 stmt.run("Sam", "Gbian", "gonxped31@gmail.com", "1234");
-                stmt.finalize();
-            })
+                stmt.finalize();*/
+            });
         }
     });
 }
 
-app.use(express.json());
-
 /* GRAPH CODE */
-
-// API to add a graph to the database
+// API to save a graph
 app.post('/', (req, res) => {
     console.log("Request received.");
     const newData = req.body;
+    const user = req.session.user;
+    const graphTabName = getHashedTableName(user.email);
 
-    console.log(`Adding data to '${graphTabName}'.`);
-    db.run(`INSERT INTO ${graphTabName} (name, nodes, edges) VALUES (?, ?, ?)`, [newData.graphName, JSON.stringify(newData.nodes), JSON.stringify(newData.edges)], (err) => {
+    console.log(`Adding data to ${user.firstName}'s table if it exists.`);
+    db.get(`SELECT name FROM sqlite_master WHERE type='table' AND name=?`, [graphTabName], (err, row) => {
         if (err) {
-            console.error('Error adding data to the database:', err.message);
-            res.status(500).json({ error: 'An error occurred while adding data.' });
+            console.error(`Error checking table existence: ${err.message}`);
+        } else if (row) {
+            db.run(`INSERT INTO ${graphTabName} (name, nodes, edges) VALUES (?, ?, ?)`, [newData.graphName, JSON.stringify(newData.nodes), JSON.stringify(newData.edges)], (err) => {
+                if (err) {
+                    console.error('Error adding data to the database:', err.message);
+                    res.status(500).json({ error: 'An error occurred while adding data.' });
+                } else {
+                    console.log('Data added successfully');
+                    res.status(200).json({ message: 'Data added successfully' });
+                }
+            });
         } else {
-            console.log('Data added successfully');
-            res.status(200).json({ message: 'Data added successfully' });
+            console.log(`Table with the name '${user.email}' doesn't exists.`);
         }
-    });
+    })
+    
 });
 
 // API for retreive a graph
 app.get('/', (req, res) => {
     console.log("Retreiving data")
     const graphName = req.query.graphName;
+    const graphTabName = getHashedTableName(req.session.user.email);
 
     db.get(`SELECT * FROM ${graphTabName} WHERE name = ?`, [graphName], (err, row) =>{
         if (err) {
@@ -97,6 +120,8 @@ app.get('/', (req, res) => {
 // API to get all the graphs name
 app.get('/viewGraphs', (req, res) => {
     console.log("Loading graphs");
+    const graphTabName = getHashedTableName(req.session.user.email);
+    
     try {
         db.all(`SELECT name FROM ${graphTabName}`, (err, rows) => {
             if (err) {
@@ -139,6 +164,7 @@ app.get('/viewGraphs', (req, res) => {
 app.delete('/', (req, res) => {
     console.log("Deleting data...");
     const name = req.query.graphName;
+    const graphTabName = getHashedTableName(req.session.user.email);
     console.log(name);
 
     db.run(`DELETE FROM ${graphTabName} WHERE name = ?`, [name], (err) => {
@@ -157,6 +183,7 @@ app.delete('/', (req, res) => {
 app.post('/addUser', (req, res) => {
     const newUser = req.body;
     const stmt = db.prepare(`INSERT INTO ${usersTabName} VALUES (null, ?, ?, ?, ?)`);
+    const graphTabName = getHashedTableName(newUser.email);
 
     // encrypte the user password
     bcrypt.hash(newUser.password, saltRounds, (err, hash) => {
@@ -169,6 +196,7 @@ app.post('/addUser', (req, res) => {
             try {
                 stmt.run(newUser.firstName, newUser.lastName, newUser.email, encryptedPassword);
                 stmt.finalize();
+                db.run(`CREATE TABLE ${graphTabName} (name TEXT, nodes TEXT, edges TEXT)`);
                 console.log(`${newUser.lastName} have been added succesfully.`)
                 res.status(200).json({ message: 'User saved successfully' });
             } catch (error) {
@@ -200,13 +228,13 @@ app.get('/verifyUserExistence', (req, res) => {
 });
 
 // API to verify user password and the email for sign in
-app.get('/verifypassword', (req, res) => {
+app.get('/signin', (req, res) => {
     const datas = req.query.data.split(',');
     const userEmail = datas[0];
     const enteredPassword = datas[1];
 
     // Get the hashed password from the database
-    db.get(`SELECT password FROM ${usersTabName} WHERE email = ?`, [userEmail], (err, row) => {
+    db.get(`SELECT * FROM ${usersTabName} WHERE email = ?`, [userEmail], (err, row) => {
         if (err) {
             console.log(`Error: ${err.message}`);
             res.status(500).json({ error: `An error occurred while getting a user password for verification` });
@@ -222,6 +250,7 @@ app.get('/verifypassword', (req, res) => {
                     } else {
                         if (result) {
                             console.log(`Password matches.`);
+                            req.session.user = row;
                         } else {
                             console.log(`Password doesn't match.`);
                         }
@@ -232,7 +261,6 @@ app.get('/verifypassword', (req, res) => {
         }
     });
 });
-
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
