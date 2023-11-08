@@ -1,9 +1,21 @@
 
 const express = require("express");
+const bcrypt = require('bcrypt');
 const fs = require('fs');
+const path = require("path"); // Import the 'path' module
 const sqlite3 = require('sqlite3').verbose();
 const app = express();
-const port = /*process.env.PORT ||*/ 3000;
+const port = process.env.PORT || 3000;
+
+app.use(express.static(`${process.cwd()}/public/`))
+
+app.get('*', async (req, res) => {
+    await res.sendFile(`${process.cwd()}/public/index.html`, (err) => {
+        if (err) {
+            res.status(500).send(err)
+        }
+    })
+});
 
 // create a database
 const databaseName = "familyTreeDb.db";
@@ -159,6 +171,7 @@ app.post('/SignUp', (req, res) => {
 
 // API to checck if a user exist (based on the email only)
 app.get('/verifyUserExistance', (req, res) => {
+    console.log("Checking user existance...");
     const userEmail = req.query.userEmail;
     db.get(`SELECT * FROM ${usersTabName} WHERE email = ?`, [userEmail], (err, row) => {
         if (err) {
@@ -178,4 +191,4 @@ app.get('/verifyUserExistance', (req, res) => {
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
-})
+});
