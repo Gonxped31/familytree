@@ -64,7 +64,7 @@ export default function DisplayButtons({ graph, updateGraph, changeOption }) {
                     CURRENT DISPLAY : {hierarchy}
                 </button>
                 {/*<Button variant='contained' onClick={() => navigate('/SignIn')}>EXIT</Button>*/}
-                <Link href='/SignIn' variant="body2">
+                <Link href='/principalview' variant="body2">
                     <Button variant={"contained"}>
                         EXIT
                     </Button>

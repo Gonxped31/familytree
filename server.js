@@ -91,7 +91,7 @@ app.post('/', (req, res) => {
 });
 
 // API for retreive a graph
-app.get('/', (req, res) => {
+app.get('/retreiveGraph', (req, res) => {
     console.log("Retreiving data")
     const graphName = req.query.graphName;
     const graphTabName = getHashedTableName(req.session.user.email);

@@ -2,7 +2,7 @@ import React from 'react';
 
 export default function LoadButton({ updateGraph, graphName }) {
     const handleLoad = () => {
-        fetch(`/?graphName=${graphName}`, {
+        fetch(`/retreiveGraph?graphName=${graphName}`, {
             method: 'GET',
             headers: {
                 'Content-type': 'application/json'

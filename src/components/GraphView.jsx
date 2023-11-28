@@ -34,7 +34,7 @@ export default function GraphView({ graph, option, updateGraph }) {
 
       setEditMode(true);
     }
-}
+  }
 
   return (
     <div className='graph'>

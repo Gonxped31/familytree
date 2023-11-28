@@ -5,15 +5,17 @@ import reportWebVitals from './reportWebVitals';
 import {BrowserRouter as Router, Routes, Route} from "react-router-dom";
 import SignIn from "./components/authentifications/SignIn";
 import SignUp from "./components/authentifications/SignUp";
-import Home from "./components/Home";
+import EditMode from "./components/appModes/EditMode";
+import PrincipalView from './components/appModes/PrincipalView';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <Router>
         <Routes>
-            <Route path={"/"} element={<SignUp />} />
+            {/*<Route path={"/"} element={<SignUp />} />
             <Route path={"/SignIn"} element={<SignIn />} />
-            <Route path={"/home"} element={<Home />} />
+            <Route path={"/edit"} element={<EditMode />} />*/}
+            <Route path={"/principalview"} element={<PrincipalView />} />
         </Routes>
     </Router>
 );
