@@ -1,5 +1,3 @@
-<h1>Home description</h1>
-
 <h2>Porject description</h2>
 This app allows you to create a graph/tree to represent family members and the relation between them.
 
@@ -13,20 +11,7 @@ NodeJS 20
  You can now start using the app !
 </p>
 
-<h2>Preloaded data</h2>
-<p>
-  There are some premaded graphs that you can load:<br/>
- <ul>
-  <li>
-   Dragon_Ball_Tree
-  </li>
-  <li>
-   Naruto_Tree
-  </li>
- </ul>
-</p>
-
-<h2>Home features</h2>
+<h2>Features</h2>
 <h3>Buttons description</h3>
 Here's a description of app's buttons:
 <ul>
