@@ -3,7 +3,7 @@ import React from 'react'
 export default function SaveButton({ graph, graphName }) {
 
     const handleSaveGraph = () => {
-        fetch('/', {
+        fetch('/saveGraph', {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json',

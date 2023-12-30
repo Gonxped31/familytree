@@ -12,9 +12,9 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <Router>
         <Routes>
-            {/*<Route path={"/"} element={<SignUp />} />
+            <Route path={"/"} element={<SignUp />} />
             <Route path={"/SignIn"} element={<SignIn />} />
-            <Route path={"/edit"} element={<EditMode />} />*/}
+            <Route path={"/edit"} element={<EditMode />} />
             <Route path={"/principalview"} element={<PrincipalView />} />
         </Routes>
     </Router>

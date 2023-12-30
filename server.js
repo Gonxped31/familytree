@@ -33,7 +33,6 @@ app.use(express.json());
 
 app.use(express.static(path.join(__dirname, 'public')));*/
   
-
 if (fs.existsSync(databaseName)){
     db = new sqlite3.Database(databaseName, sqlite3.OPEN_READWRITE, (err) => {
         if (err){
@@ -63,13 +62,14 @@ if (fs.existsSync(databaseName)){
 
 /* GRAPH CODE */
 // API to save a graph
-app.post('/', (req, res) => {
+app.post('/saveGraph', (req, res) => {
     console.log("Request received.");
     const newData = req.body;
     const user = req.session.user;
     const graphTabName = getHashedTableName(user.email);
 
     console.log(`Adding data to ${user.firstName}'s table if it exists.`);
+    // Check user existance
     db.get(`SELECT name FROM sqlite_master WHERE type='table' AND name=?`, [graphTabName], (err, row) => {
         if (err) {
             console.error(`Error checking table existence: ${err.message}`);

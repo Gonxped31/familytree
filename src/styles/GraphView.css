@@ -1,6 +1,10 @@
 .graph {
-    position: relative;
-    padding-bottom: 0;
+    width: 2000px;
+    height: 900px;
+}
+
+.buttons {
     display: flex;
     flex-direction: row;
+    align-items: flex-end;
 }

@@ -49,3 +49,31 @@ export async function deleteGraph({ graphName }) {
         console.log("Error deleting the graph: ", error);
     }
 }
+
+export function saveGraph(graph) {
+    fetch('/saveGraph', {
+        method: 'POST',
+        headers: {
+            'Content-type': 'application/json',
+        },
+        body: JSON.stringify({
+            graphName: graph.name,
+            nodes: graph.nodes,
+            edges: graph.edges,
+        }),
+    })
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then((data) => {
+            console.log('Data received from the server:', data);
+        })
+        .catch((error) => {
+            console.error('Error saving the graph:', error);
+        });
+};
+
+

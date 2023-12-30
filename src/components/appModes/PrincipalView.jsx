@@ -24,68 +24,41 @@ const PrincipalView = () => {
     p: 4,
   };
 
-  const [graph, setGraph] = React.useState({
-    name : "Graph_1", 
-    nodes : [{id:"A",label:"A",data:["A","A","52","A","A","A","A"],shape:"circle"}],
-    edges : []
-  });
-  const [nodes, updateNodes] = React.useState([
-    { id: "Graph_1" },
-    { id: "Graph_2" },
-    { id: "Graph_3" },
-    { id: "Graph_4" },
-    { id: "Graph_5" },
-    { id: "Graph_6" },
-    { id: "Graph_7" },
-    { id: "Graph_8" },
-    { id: "Graph_9" },
-    { id: "Graph_10" },
-    { id: "Graph_11" },
-    { id: "Graph_12" },
-    { id: "Graph_13" },
-    { id: "Graph_14" },
-    { id: "Graph_15" },
-    { id: "Graph_16" },
-    { id: "Graph_17" },
-    { id: "Graph_18" },
-    { id: "Graph_19" },
-    { id: "Graph_20" },
-    { id: "Graph_21" },
-    { id: "Graph_22" },
-    { id: "Graph_23" },
-    { id: "Graph_24" },
-  ]);
-  const [rows, setRows] = React.useState([
+  const [graph, setGraph] = React.useState([]);
+  
+  const [nodes, updateNodes] = React.useState([]);
+  const [rows, setRows] = React.useState();
+  /*[
     {
       name : "Graph_1", 
-      nodes : [{id:"A",label:"A",data:["A","A","52","A","A","A","A"],shape:"circle"}],
+      nodes : [{id:"A", label:"A", data:["A","A","52","A","A","A","A"], shape:"circle"},
+      {id:"B", label:"B", data:["A","A","52","A","A","A","A"], shape:"circle"}
+      ],
       edges : []
     },
     {
-      name : "Graph_2", 
-      nodes : [{id:"A",label:"A",data:["A","A","52","A","A","A","A"],shape:"circle"},
-      {id:"B",label:"B",data:["A","A","52","A","A","A","A"],shape:"circle"}
-      ],
+      name : "Graph_2",
+      nodes : [{id:"ArianeEagle", label:"Ariane E.", data:["Ariane","Eagle","52","A","A","A","A"], shape:"circle"},
+      {id:"BobEagle", label:"Bob E.", data:["Bob","Eagle","52","A","A","A","A"], shape:"circle"},
+      {id:"CamiliaBenson", label:"Camilia B.", data:["Camilia","Benson","52","A","A","A","A"], shape:"circle"},
+      {id:"IsmaelGbian", label:"Ismael G.", data:["Ismael","Gbian","52","A","A","A","A"], shape:"circle"}],
+
       edges : []
     }
-  ]);
+  ]*/
   const [editMode, setEditMode] = React.useState(false);
   const [newGraphMode, setNewGraphMode] = React.useState(false);
-  const [nodeName, setNodeName] = React.useState("");
+  const [newGraphName, setNewGraphName] = React.useState("");
 
   React.useEffect(() => {
-    /*const links = [
-      { source: 'A', target: 'B' },
-      { source: 'B', target: 'C' },
-      { source: 'C', target: 'D' },
-      { source: 'D', target: 'A' },
-    ];*/
 
-
+    // Get the graphs from the database
     Utilitaries.fetchGraphs().then((data) => {
       const parsedData = JSON.parse(data);
       setRows(parsedData);
-      const graphs = parsedData.map((row) => row.name);
+      const graphsName = parsedData.map((row) => row.name);
+      const graphs = graphsName.map((name) => ({ id: name }));
+      console.log(graphs)
       updateNodes(graphs);
     })
     .catch((error) => {
@@ -101,6 +74,7 @@ const PrincipalView = () => {
     // Create force simulation
     const simulation = d3.forceSimulation(nodes);
     
+    // Set nodes positions
     var dx = 350;
     var pos = 0;
     nodes.forEach((node, index) => {
@@ -128,13 +102,13 @@ const PrincipalView = () => {
     .attr('width', '100%')
     .attr('height', '100%');
 
-    //  Add a new graph button
+    //  Add a 'new graph' button
     svg.data(nodes)
       .append('text')
       .attr('x', 950)
       .attr('y', 35)
       .attr('cursor', 'pointer')
-      .text('\u002B') // Unicode character for a pen icon
+      .text('\u002B')
       .style('font-size', '80px')
       .style('text-anchor', 'middle')
       .style('dominant-baseline', 'middle')
@@ -216,15 +190,15 @@ const PrincipalView = () => {
       setNewGraphMode(true);
     }
 
-  }, [nodes]);
+  }, []);
 
   const handleModalClose = () => {
     setNewGraphMode(false);
   };
-  
+
   const handleContinueClick = () => {
     setGraph({
-      name: nodeName,
+      name: newGraphName,
       nodes: [],
       edges: []
     });
@@ -249,7 +223,7 @@ const PrincipalView = () => {
             type='text' 
             id='firstname' 
             name='firstname' 
-            onChange={(e) => setNodeName(e.target.value)}/>
+            onChange={(e) => setNewGraphName(e.target.value)}/>
           <Button onClick={handleContinueClick}>Continue</Button>
         </Box>
       </Modal>

@@ -10,9 +10,9 @@ export default function GraphInputs({ graph, updateGraph, changeOption }) {
   <div className="inputs">
         {/*<NodesInput graph={graph} updateGraph={updateGraph} />*/}
 
-        <EdgesInput graph={graph} updateGraph={updateGraph} />
+        {/*<EdgesInput graph={graph} updateGraph={updateGraph} />*/}
 
-        <DisplayButtons graph={graph} updateGraph={updateGraph} changeOption={changeOption} />
+        {/*<DisplayButtons graph={graph} updateGraph={updateGraph} changeOption={changeOption} />*/}
   </div>
     
   )

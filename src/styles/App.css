@@ -1,3 +1,9 @@
 body {
-  background-color: rgb(7, 9, 56);
+  background-color: white;
+}
+
+.inputs {
+  display: flex;
+  flex-direction: column;
+  width: 50%;
 }
