@@ -1,5 +1,6 @@
 from flask import Flask, request, session, jsonify, render_template
 from flask_bcrypt import Bcrypt
+from flask_cors import CORS
 import os
 import sqlite3
 import json
@@ -7,6 +8,7 @@ import hashlib
 
 app = Flask(__name__)
 bcrypt = Bcrypt(app)
+CORS(app)
 app.secret_key = 'hamburger-fouberg'
 
 # Function to create a hashed table name from an email
@@ -16,7 +18,7 @@ def getHashedTableName(email):
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return {"member": ["member1", "member2", "member3"]}
 
 ### Users routes ###
 @app.route('/addUser', methods=['POST'])
@@ -169,4 +171,4 @@ def get_graphs():
 
 
 if __name__ == '__main__':
-    app.run(debug=True, port=3000)
+    app.run(debug=True)
