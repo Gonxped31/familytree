@@ -78,14 +78,18 @@ def sign_in():
         row = cursor.fetchone()
 
         if not row:
+            print("This user doesn't exist")
             return jsonify(False)
 
-        stored_password = row[4]  # Assuming the password is in the 5th column
+        stored_password = row[4]
 
         if bcrypt.check_password_hash(stored_password, entered_password):
+            print("User found. Creating session")
             session['user'] = {'firstName': row[1], 'email': row[3]}
+
             return jsonify(True)
         else:
+            print("This user doesn't exist")
             return jsonify(False)
 
 

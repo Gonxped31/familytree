@@ -24,41 +24,31 @@ const PrincipalView = () => {
     p: 4,
   };
 
+  // The graph to display
   const [graph, setGraph] = React.useState([]);
   
+  // The nama of the graphs
   const [nodes, updateNodes] = React.useState([]);
-  const [rows, setRows] = React.useState();
-  /*[
-    {
-      name : "Graph_1", 
-      nodes : [{id:"A", label:"A", data:["A","A","52","A","A","A","A"], shape:"circle"},
-      {id:"B", label:"B", data:["A","A","52","A","A","A","A"], shape:"circle"}
-      ],
-      edges : []
-    },
-    {
-      name : "Graph_2",
-      nodes : [{id:"ArianeEagle", label:"Ariane E.", data:["Ariane","Eagle","52","A","A","A","A"], shape:"circle"},
-      {id:"BobEagle", label:"Bob E.", data:["Bob","Eagle","52","A","A","A","A"], shape:"circle"},
-      {id:"CamiliaBenson", label:"Camilia B.", data:["Camilia","Benson","52","A","A","A","A"], shape:"circle"},
-      {id:"IsmaelGbian", label:"Ismael G.", data:["Ismael","Gbian","52","A","A","A","A"], shape:"circle"}],
 
-      edges : []
-    }
-  ]*/
+  // All of the users's graphs
+  const [rows, setRows] = React.useState([]);
+
+  // Mode to edit the graph
   const [editMode, setEditMode] = React.useState(false);
+
+  // New graph to add infos
   const [newGraphMode, setNewGraphMode] = React.useState(false);
   const [newGraphName, setNewGraphName] = React.useState("");
 
   React.useEffect(() => {
-
     // Get the graphs from the database
     Utilitaries.fetchGraphs().then((data) => {
       const parsedData = JSON.parse(data);
       setRows(parsedData);
-      const graphsName = parsedData.map((row) => row.name);
+      //console.log(parsedData)
+      const graphsName = parsedData.map((row) => row[0]);
       const graphs = graphsName.map((name) => ({ id: name }));
-      console.log(graphs)
+      //console.log(graphs)
       updateNodes(graphs);
     })
     .catch((error) => {
@@ -128,8 +118,15 @@ const PrincipalView = () => {
       .attr('stroke', 'black')
       .on('click', (_, d) => {
         if (rows.length > 0) {
-          const graphToDisplay = rows.filter((elem) => elem.name === d.id);
-          setGraph(graphToDisplay[0]);
+          const graphToDisplay = rows.filter((elem) => elem[0] === d.id);
+          const unescapedString = graphToDisplay[0][1].replace(/\\/g, '');
+          const parsedGraph = {
+            name: graphToDisplay[0][0],
+            nodes: JSON.parse(unescapedString),
+            edges: JSON.parse(graphToDisplay[0][2])
+          }
+          console.log(parsedGraph)
+          setGraph(parsedGraph);
           setEditMode(true);
         }
       });
