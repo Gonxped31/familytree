@@ -123,17 +123,19 @@ def save_graph():
     return jsonify({'error': 'An error occurred while adding data.'}), 500
 
 # Delete a graph
-@app.route('/deleteGraph', methods=['DELETE'])
-def delete_graph():
-    graph_name = request.args.get('graphName')
+@app.route('/deleteGraph/<graph_name>', methods=['DELETE'])
+def delete_graph(graph_name):
+    print(graph_name)
     graph_tab_name = getHashedTableName(session['user']['email'])
 
     with sqlite3.connect('familyTreeDb.db') as conn:
-        cursor = conn.cursor()
-        cursor.execute(f"DELETE FROM {graph_tab_name} WHERE name=?", [graph_name])
-        conn.commit()
-
-    return jsonify({'message': 'Graph deleted successfully'}), 200
+        try:
+            cursor = conn.cursor()
+            cursor.execute(f"DELETE FROM {graph_tab_name} WHERE name=?", [graph_name])
+            conn.commit()
+        except sqlite3.Error as e:
+            conn.rollback()
+            return jsonify({'error': 'Error deleting graph', 'details': str(e)}), 500
 
 # Retreive a graph
 @app.route('/retreiveGraph', methods=['GET'])

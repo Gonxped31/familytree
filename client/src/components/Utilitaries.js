@@ -1,4 +1,5 @@
 
+// Update changes while writing in a form
 export default function handleFormChanges(e, index, nodeInformations ,setNodeInformations) {
     // new value
     const newValue = e.target.value
@@ -14,7 +15,9 @@ export default function handleFormChanges(e, index, nodeInformations ,setNodeInf
 }
 
 
-// APIs call
+// APIs call 
+
+// Get all the graphs of the user
 export async function fetchGraphs() {
     try {
         const response = await fetch('/getGraphs', {
@@ -32,10 +35,10 @@ export async function fetchGraphs() {
     }
 }
 
-export async function deleteGraph({ graphName }) {
-    console.log("IN !!")
+// Delete a graph
+export async function deleteGraph(graphName) {
     try {
-        const response = await fetch(`/?graphName=${graphName}`, {
+        const response = await fetch(`/deleteGraph/${graphName}`, {
             method: 'DELETE',
             headers: {
                 'Content-type': 'application/json'
@@ -50,6 +53,7 @@ export async function deleteGraph({ graphName }) {
     }
 }
 
+// Save a graph
 export function saveGraph(graph) {
     fetch('/saveGraph', {
         method: 'POST',
@@ -74,6 +78,4 @@ export function saveGraph(graph) {
         .catch((error) => {
             console.error('Error saving the graph:', error);
         });
-};
-
-
+};//ddddd

@@ -24,6 +24,8 @@ const PrincipalView = () => {
     p: 4,
   };
 
+  const [fetchGraphs, setFetchGraphs] = React.useState(true)
+
   // The graph to display
   const [graph, setGraph] = React.useState([]);
   
@@ -41,20 +43,25 @@ const PrincipalView = () => {
   const [newGraphName, setNewGraphName] = React.useState("");
 
   React.useEffect(() => {
-    // Get the graphs from the database
-    Utilitaries.fetchGraphs().then((data) => {
-      const parsedData = JSON.parse(data);
-      setRows(parsedData);
-      //console.log(parsedData)
-      const graphsName = parsedData.map((row) => row[0]);
-      const graphs = graphsName.map((name) => ({ id: name }));
-      //console.log(graphs)
-      updateNodes(graphs);
-    })
-    .catch((error) => {
-      console.log("Error deleting the graph: ", error);
-    })
+    if (fetchGraphs) {
+      // Get the graphs from the database
+      Utilitaries.fetchGraphs().then((data) => {
+        const parsedData = JSON.parse(data);
+        setRows(parsedData);
+        //console.log(parsedData)
+        const graphsName = parsedData.map((row) => row[0]);
+        const graphs = graphsName.map((name) => ({ id: name }));
+        //console.log(graphs)
+        updateNodes(graphs);
+      })
+      .catch((error) => {
+        console.log("Error deleting the graph: ", error);
+      })
+      setFetchGraphs(false);
+    }
+  }, [fetchGraphs]);
 
+  React.useEffect(() => {
     if (nodes.length >= 80) {
       alert("Your graph inventory is full");
     }
@@ -160,7 +167,7 @@ const PrincipalView = () => {
       .style('font-size', '25px')
       .style('text-anchor', 'middle')
       .style('dominant-baseline', 'middle')
-      .on('click', (_, d) => deleteNode(d.id));
+      .on('click', (_, d) =>{deleteNode(d.id)});
 
     // Update positions on each tick
     simulation.on('tick', () => {
@@ -181,13 +188,14 @@ const PrincipalView = () => {
 
       const newNodes = nodes.filter((node) => node.id !== nodeId);
       updateNodes(newNodes);
+      setFetchGraphs(true);
     }
 
     const addNode = () => {
       setNewGraphMode(true);
     }
 
-  }, []);
+  }, [nodes]);
 
   const handleModalClose = () => {
     setNewGraphMode(false);
