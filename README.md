@@ -2,7 +2,7 @@
 This app allows you to create a graph/tree to represent family members and the relation between them.
 
 <h2>Requierement</h2>
-NodeJS 20 
+NodeJS 20 <br/>
 Python3 3.10 (For the server)
 
 <h2>Run the app and the server</h2>
