@@ -25,7 +25,7 @@ Python3 3.10 (For the server)
     [NOT AVAILABLE YET] You can edit the graph name by clicking on the pen on the top right.
   </p>
 
-<h3>Edit Mode</h3>h3>
+<h3>Edit Mode</h3>
 <p>In this mode, you will be able to edit your graph by adding new family members, edit them or delete them.<br/>
   Be carefull, when you click on the node, the default values in the input fields are the actual informations.<br/>
   You can also move and zoom on the graph area.</p>
