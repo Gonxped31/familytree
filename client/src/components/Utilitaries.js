@@ -45,7 +45,7 @@ export async function deleteGraph(graphName) {
             }
         });
         if (!response.ok) {
-            throw new Error("Network error: Check your server and then reload the page.");
+            throw new Error("Network error: Network response wasn't ok.");
         }
         return await response.text();
     } catch (error) {
@@ -55,6 +55,7 @@ export async function deleteGraph(graphName) {
 
 // Save a graph
 export function saveGraph(graph) {
+
     fetch('/saveGraph', {
         method: 'POST',
         headers: {
@@ -78,4 +79,32 @@ export function saveGraph(graph) {
         .catch((error) => {
             console.error('Error saving the graph:', error);
         });
-};//ddddd
+
+};
+
+// Modify an existing graph
+export function modifyExistingGraph(graph) {
+    fetch('/updateGraph', {
+        method: 'PUT',
+        headers: {
+            'Content-type': 'application/json',
+        },
+        body: JSON.stringify({
+            graphName: graph.name,
+            nodes: graph.nodes,
+            edges: graph.edges,
+        }),
+    })
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then((data) => {
+            console.log('Data received from the server:', data);
+        })
+        .catch((error) => {
+            console.error('Error saving the graph:', error);
+        });
+}

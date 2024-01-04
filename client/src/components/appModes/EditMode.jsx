@@ -8,7 +8,8 @@ import '../../styles/GraphView.css';
 // @ts-ignore
 import Graph from 'react-vis-network-graph';
 
-const EditMode = ({ graphToEdit }) => {
+const EditMode = ({ graphToEdit, allGraphs }) => {
+
   const [graph, updateGraph] = useState({
     name: graphToEdit.name,
     nodes: graphToEdit.nodes,
@@ -22,8 +23,6 @@ const EditMode = ({ graphToEdit }) => {
 
   const handleGraphClick = (event) => {
     const { nodes: clickedNodes } = event;
-    const { edges: clickedEdges } = event;
-    console.log(clickedEdges);
     if (clickedNodes.length > 0) {
       const nodeId = clickedNodes[0];
       const retreiveNode = graph.nodes.filter((node) => node.id === nodeId);
@@ -48,6 +47,7 @@ const EditMode = ({ graphToEdit }) => {
   }
 
   const addNode = () => {
+    console.log("Adding node")
     const nodeInformations = [`node${i}`, "Null", "Null", "Null", "Null", "Null", "Null", "Null"];
     const newNode = {
       id: `node${i}`,
@@ -71,12 +71,20 @@ const EditMode = ({ graphToEdit }) => {
   };
 
   const saveGraph = () => {
-    Utilitaries.saveGraph(graph);
-    setPrincipalView(true);
+    // Reminder: allGraphs is an array of dictionnary
+    const contains = allGraphs.filter((name) => name.id === graph.name);
+    if (contains.length === 1){
+      Utilitaries.modifyExistingGraph(graph);
+      setPrincipalView(true);
+    } else {
+      console.log("save")
+      Utilitaries.saveGraph(graph);
+      setPrincipalView(true);
+    }
   };
 
   return (
-    <>
+    <div>
       {editNodeMode && (
         <div className='graph'>
           <div className='modal-background'>
@@ -109,12 +117,12 @@ const EditMode = ({ graphToEdit }) => {
           <Button variant='contained' onClick={saveGraph}>
             Save Graph
           </Button>
-          <Button variant='contained' onClick={setPrincipalView(true)}>
+          <Button variant='contained' onClick={() => setPrincipalView(true)}>
             Exit
           </Button>
         </div>
       )}
-    </>
+    </div>
   );
 };
 

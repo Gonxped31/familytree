@@ -52,6 +52,7 @@ def update_user():
 
     return jsonify({'message': 'User updated successfully'}), 200
 
+# Verify user existence
 @app.route('/verifyUserExistence', methods=['GET'])
 def verify_user_existence():
     email = request.args.get('data')
@@ -66,6 +67,7 @@ def verify_user_existence():
         else:
             return jsonify({'message': 'User not found'})
 
+# Sign in
 @app.route('/signin', methods=['GET'])
 def sign_in():
     user_data = request.args.get('data').split(',')
@@ -122,10 +124,27 @@ def save_graph():
 
     return jsonify({'error': 'An error occurred while adding data.'}), 500
 
+# Update graph information
+@app.route('/updateGraph', methods=['PUT'])
+def update_graph():
+    try:
+        updated_data = request.json
+        graph_tab_name = getHashedTableName(session['user']['email'])
+        updated_values = (json.dumps(updated_data['nodes']), json.dumps(updated_data['edges']), updated_data['graphName'])
+
+        with sqlite3.connect('familyTreeDb.db') as conn:
+            cursor = conn.cursor()
+            cursor.execute(f"UPDATE {graph_tab_name} SET nodes=?, edges=? WHERE name=?", updated_values)
+            conn.commit()
+
+        return jsonify({'message': 'Graph updated successfully'}), 200
+    except Exception as e:
+        print(f"Error updating graph: {str(e)}")
+        abort(500)  # Internal Server Error
+
 # Delete a graph
 @app.route('/deleteGraph/<graph_name>', methods=['DELETE'])
 def delete_graph(graph_name):
-    print(graph_name)
     graph_tab_name = getHashedTableName(session['user']['email'])
 
     with sqlite3.connect('familyTreeDb.db') as conn:
@@ -138,10 +157,9 @@ def delete_graph(graph_name):
             return jsonify({'error': 'Error deleting graph', 'details': str(e)}), 500
 
 # Retreive a graph
-@app.route('/retreiveGraph', methods=['GET'])
-def retrieve_graph():
+@app.route('/retreiveGraph/<graph_name>', methods=['GET'])
+def retrieve_graph(graph_name):
     print("Retrieving data")
-    graph_name = request.args.get('graphName')
     graph_tab_name = getHashedTableName(session['user']['email'])
 
     with sqlite3.connect('familyTreeDb.db') as conn:

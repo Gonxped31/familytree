@@ -27,9 +27,13 @@ const PrincipalView = () => {
   const [fetchGraphs, setFetchGraphs] = React.useState(true)
 
   // The graph to display
-  const [graph, setGraph] = React.useState([]);
+  const [graph, setGraph] = React.useState({
+    name: '',
+    nodes: [],
+    edges: []
+  });
   
-  // The nama of the graphs
+  // The names of the graphs
   const [nodes, updateNodes] = React.useState([]);
 
   // All of the users's graphs
@@ -100,8 +104,7 @@ const PrincipalView = () => {
     .attr('height', '100%');
 
     //  Add a 'new graph' button
-    svg.data(nodes)
-      .append('text')
+    svg.append('text')
       .attr('x', 950)
       .attr('y', 35)
       .attr('cursor', 'pointer')
@@ -132,7 +135,6 @@ const PrincipalView = () => {
             nodes: JSON.parse(unescapedString),
             edges: JSON.parse(graphToDisplay[0][2])
           }
-          console.log(parsedGraph)
           setGraph(parsedGraph);
           setEditMode(true);
         }
@@ -194,7 +196,6 @@ const PrincipalView = () => {
     const addNode = () => {
       setNewGraphMode(true);
     }
-
   }, [nodes]);
 
   const handleModalClose = () => {
@@ -211,7 +212,8 @@ const PrincipalView = () => {
   };
 
   if (editMode) {
-    return <EditMode graphToEdit={graph}/>
+    //console.log("edit mode")
+    return <EditMode graphToEdit={graph} allGraphs={nodes}/>
   } else if (newGraphMode) {
     return (<div>
       <Modal
