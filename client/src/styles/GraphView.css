@@ -1,0 +1,10 @@
+.graph {
+    width: 2000px;
+    height: 900px;
+}
+
+.buttons {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+}
