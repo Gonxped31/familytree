@@ -31,5 +31,5 @@ Python3 3.10 (For the server)
   You can also move and zoom on the graph area.</p>
 
 <h2>Warnings and possible errors</h2>
--> If your graph doesn't appear after the first a modification or adding a new graph, reload the page an loggin<br/>
+-> If your graph doesn't appear after the a modification or adding a new graph, reload the page and loggin<br/>
  to see the changes.
