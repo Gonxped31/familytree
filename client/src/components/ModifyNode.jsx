@@ -73,7 +73,6 @@ export default function ModifyNode({ graph ,selectedNode, updateGraph, setEditNo
         }
     };
 
-
   return (
     <div>
         <div>
